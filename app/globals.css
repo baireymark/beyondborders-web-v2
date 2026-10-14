@@ -317,11 +317,16 @@ h2.display{font-size:clamp(1.9rem,4vw,3.15rem)}
 .hero{background:var(--ink-deep);isolation:isolate}
 .hero h1{font-size:clamp(2.5rem,5.4vw,4.7rem)}
 .aurora{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
-.aurora i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.75;will-change:transform}
-.aurora i:nth-child(1){width:52vw;height:52vw;right:-12vw;top:-14vw;background:#5B2BE0;animation:drift1 22s ease-in-out infinite alternate}
-.aurora i:nth-child(2){width:40vw;height:40vw;right:14vw;bottom:-20vw;background:#FF3D9A;opacity:.5;animation:drift2 26s ease-in-out infinite alternate}
-.aurora i:nth-child(3){width:38vw;height:38vw;left:-14vw;top:18%;background:#0FB5E0;opacity:.42;animation:drift3 30s ease-in-out infinite alternate}
-.aurora i:nth-child(4){width:26vw;height:26vw;left:34%;top:-12vw;background:#3B5BFF;opacity:.55;animation:drift2 24s ease-in-out infinite alternate-reverse}
+.aurora i{position:absolute;opacity:.75;will-change:transform}
+/* Each glow is a radial gradient fitted to the falloff of a disc under filter:blur(90px), which was far too
+   expensive to repaint on these large animated layers, especially on phones. */
+.aurora i::before{content:"";position:absolute;inset:-36%;background:radial-gradient(closest-side,var(--c),color-mix(in srgb,var(--c) 96%,transparent) 20%,color-mix(in srgb,var(--c) 78%,transparent) 40%,color-mix(in srgb,var(--c) 40%,transparent) 60%,color-mix(in srgb,var(--c) 10%,transparent) 80%,transparent)}
+/* The smallest glow is blurred well past its own size, so it spreads wider and peaks lower. */
+.aurora i:nth-child(4)::before{inset:-55%;background:radial-gradient(closest-side,var(--c),color-mix(in srgb,var(--c) 89%,transparent) 20%,color-mix(in srgb,var(--c) 59%,transparent) 40%,color-mix(in srgb,var(--c) 28%,transparent) 60%,color-mix(in srgb,var(--c) 9%,transparent) 80%,transparent)}
+.aurora i:nth-child(1){width:52vw;height:52vw;right:-12vw;top:-14vw;--c:#5B2BE0;animation:drift1 22s ease-in-out infinite alternate}
+.aurora i:nth-child(2){width:40vw;height:40vw;right:14vw;bottom:-20vw;--c:#FF3D9A;opacity:.5;animation:drift2 26s ease-in-out infinite alternate}
+.aurora i:nth-child(3){width:38vw;height:38vw;left:-14vw;top:18%;--c:#0FB5E0;opacity:.42;animation:drift3 30s ease-in-out infinite alternate}
+.aurora i:nth-child(4){width:26vw;height:26vw;left:34%;top:-12vw;--c:#3B5BFF;opacity:.47;animation:drift2 24s ease-in-out infinite alternate-reverse}
 .aurora::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(80% 70% at 60% 40%,#000 0%,transparent 100%);mask-image:radial-gradient(80% 70% at 60% 40%,#000 0%,transparent 100%)}
 @keyframes drift1{to{transform:translate(-8vw,6vw) scale(1.12)}}
 @keyframes drift2{to{transform:translate(7vw,-5vw) scale(.9)}}
@@ -330,7 +335,8 @@ h2.display{font-size:clamp(1.9rem,4vw,3.15rem)}
 .hero-sign span:nth-child(2)::before{background:#9B8CFF}
 .hero-sign span:nth-child(3)::before{background:var(--pink)}
 .globe-note{background:rgba(11,10,42,.6);border-color:rgba(255,255,255,.2)}
-.service-strip{background:rgba(7,6,25,.45);backdrop-filter:blur(8px)}
+/* No backdrop blur: what sits behind is already a soft glow, and re-blurring it on every animation frame is costly. */
+.service-strip{background:rgba(7,6,25,.45)}
 .service-strip li:nth-child(1) a{--c:var(--cyan)}
 .service-strip li:nth-child(2) a{--c:var(--pink)}
 .service-strip li:nth-child(3) a{--c:var(--orange)}
@@ -469,10 +475,11 @@ input[type=range]::-moz-range-thumb{border-color:var(--violet)}
   .svc-tab::before{width:9px;height:9px;border-radius:3px}
   .svc-tab[aria-selected="true"]{background:linear-gradient(100deg,var(--c),var(--c2));border-color:transparent;color:#fff}
   .svc-tab[aria-selected="true"]::before{background:#fff}
-  .aurora i{filter:blur(60px)}
   .aurora i:nth-child(1){width:90vw;height:90vw;right:-30vw;top:auto;bottom:4vw}
   .aurora i:nth-child(2){width:70vw;height:70vw}
   .aurora i:nth-child(3){width:70vw;height:70vw;top:-10vw}
+  .aurora i:nth-child(4){opacity:.18}
+  .aurora i:nth-child(4)::before{inset:-112%}
   .service-strip{background:rgba(7,6,25,.8)}
 }
 @media (max-width:560px){.clock-row{grid-template-columns:1fr auto}}
