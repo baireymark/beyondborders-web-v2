@@ -43,7 +43,7 @@ export default function ServiceTabs() {
       </div>
       <div>
         {SERVICES.map((s) => (
-          <article
+          <div
             key={s.key}
             className="svc-panel"
             role="tabpanel"
@@ -65,7 +65,7 @@ export default function ServiceTabs() {
             <a className="btn btn-primary" href="#consultation" onClick={() => prefillForm({ service: s.option })}>
               {s.cta}
             </a>
-          </article>
+          </div>
         ))}
       </div>
     </div>
